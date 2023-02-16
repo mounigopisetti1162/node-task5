@@ -5,6 +5,7 @@ import Login from './login';
 import Home from './home';
 import Signup from './signup';
 import CustomerForm from './sigup2';
+import ReviewForm from './sigup2';
 
 function App() {
   const navigate=useNavigate()
@@ -14,16 +15,15 @@ const forgot=()=>
 }
   return (
     <div className="App">
-      <button onClick={forgot}>Login-forgot</button>
+      {/* <ReviewForm /> */}
 
-      <h1>this is the page for forgoten password</h1>
       
       <Routes>
         <Route path='/reset-password/:id/:token'element={<Form/>}/>
         <Route path='/login'element={<Login/>}/>
         <Route path='/form'element={<Form/>}/>
         <Route path='/home'element={<Home/>}/>
-        <Route path='/signup'element={<Signup/>}/>
+        <Route path='/'element={<ReviewForm/>}/>
       
           </Routes>
     </div>

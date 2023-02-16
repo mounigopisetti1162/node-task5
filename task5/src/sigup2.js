@@ -1,187 +1,167 @@
+import * as Yup from "yup";
 import { useState } from "react";
-import Joi from 'joi'
+import { Link, useNavigate } from "react-router-dom";
+import { API } from "./global";
 
-export default function Signup()
-{
-    const [user,setuser]=useState({
-        firstname:'',
-        lastname:'',
-        email:'',
-        password:'',
-        password2:'',
-    });
-    const [errors,seterrors]=useState({});
-    const schema={
-        firstname:Joi.string().min(1).max(20).required(),
-        lastname: Joi.string().required(),
-        // email: Joi.string().email().required(),
-        password:Joi.string().required().min(5).label("Password")
+import { Formik, Form, Field, ErrorMessage } from "formik";
+
+const ReviewForm = () => {
+
+  const [status,setstatus]=useState('submit')
+  const navigate=useNavigate()
+
+  const validationSchema = Yup.object().shape({
+    firstname: Yup.string().required("name is man"),
+    email: Yup.string().email().required(),
+    lastname: Yup.string().required(),
+    review: Yup.string().required(),
+    password: Yup.string().min(8).max(50).required(),
+    // confrimpassword: Yup.string().when("password", {
+    //   is: val => (val && val.length > 0 ? true : false),
+    //   then: Yup.string().oneOf(
+    //     [Yup.ref("password")],
+    //     "Both password need to be the same"
+    //   )
+    // })
+  });
+
+  const initialValues = {
+    firstname: "",
+    lastname: "",
+    email: "",
+    password: "",
+    confrimpassword: "",
+  };
+
+  const onSubmit = (values) => {
+    
+      setstatus('loding..') 
+      console.log(values)
+      fetch(`${API}/user`,{
+        method:'POST',
+        body:JSON.stringify(values),
+        headers:{"Content-Type":"application/json"},
+        
+      }).then((data)=>
+      {
+    if(data.status===401)
+    {
+      setstatus("error")
+    throw new Error(data.statusText)
+    
     }
-    const validateForm = (event) => {
-        event.preventDefault();
-        const result = Joi.validate(user, 
-            schema, { abortEarly: false });
-        console.log(result);
-        const { error } = result;
-        if (!error) {
-          return null;
-        } else {
-          const errorData = {};
-          for (let item of error.details) {
-            const name = item.path[0];
-            const message = item.message;
-            errorData[name] = message;
-          }
-          console.log(errors);
-          seterrors(errorData);
-          return errorData;
-        }
-      };
+    setstatus("submited");
+    
+    return data.json();}).then(()=>{navigate("/home")
+        
+    // localStorage.setItem('token',data.token);
+    })
+    }
+  
+    const renderError = (message) => <p className="help is-danger">{message}</p>;
+  
 
-      const handleSave = (event) => {
-        const { name, value } = event.target;
-        let errorData = { ...errors };
-        const errorMessage = validateProperty(event);
-        if (errorMessage) {
-          errorData[name] = errorMessage;
-        } else {
-          delete errorData[name];
-        }
-        let userData = { ...user };
-        userData[name] = value;
-        setuser(userData);
-        seterrors(errorData);
-      };
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={ (values, { resetForm }) => {
+         onSubmit(values);
+        resetForm();
+      }}
+    >
+      <Form>
+        <div
+          className="container"
+          style={{
+            width: "60%",
+          }}
+        >
+          <div className="field">
+            <label className="label" htmlFor="firstname">
+              Full name
+            </label>
+            <div className="control">
+              <Field
+                name="firstname"
+                type="text"
+                className="input"
+                placeholder="Full name"
+              />
+              <ErrorMessage name="firstname" render={renderError} />
+            </div>
+          </div>
+          <div className="field">
+            <label className="label" htmlFor="email">
+              Email address
+            </label>
+            <div className="control">
+              <Field
+                name="email"
+                type="text"
+                className="input"
+                placeholder="Email address"
+              />
+              <ErrorMessage name="email" render={renderError} />
+            </div>
+          </div>
 
-      const validateProperty = (event) => {
-        const { name, value } = event.target;
-        const obj = { [name]: value };
-        const subSchema = { [name]: schema[name] };
-        const result = Joi.validate(obj, subSchema);
-        const { error } = result;
-        return error ? error.details[0].message : null;
-      };
-      const clearState = () => {
-        setuser({
-          firstname: "",
-          lastname: "",
-          email: "",
-          password: "",
-          password2: "",
-        });
-      };
-      console.log(user)
-    return(
-    <div className="container-md container1"><h2>SIGN UP PAGE </h2>
-    <div className="row justify-content-center">
-    <div className="col-sm-6 col1">
-    <div className="input-group mb-3">
-  <div className="input-group-text">
-  <span >First Name</span>
-    
-  </div>
-  <input
-            type="text"
-            name="firstname"
-            className="form-control"
-            
-            onChange={handleSave}
-          />
-</div>
-{errors.firstname && (
-          <div className="alert alert-danger">
-            {errors.firstname}
+          <div className="field">
+            <label className="label" htmlFor="lastname">
+            lastname
+            </label>
+            <div className="control">
+              <Field
+                name="lastname"
+                type="text"
+                className="input"
+                placeholder="Title"
+              />
+              <ErrorMessage name="lastname" render={renderError} />
+            </div>
           </div>
-        )}
-    <div className="input-group mb-3">
-  <div className="input-group-text">
-  <span >Last Name</span>
-    
-  </div>
-  <input
-            type="text"
-            name="lastname"
-            className="form-control"
-                        onChange={handleSave}
-          />
-</div>
-{errors.lastname && (
-          <div className="alert alert-danger">
-            {errors.lastname}
+      
+          <div className="field">
+            <label className="label" htmlFor="password">
+              password
+            </label>
+            <div className="control">
+              <Field
+                name="password"
+                type="number"
+                className="input"
+                placeholder="password"
+              />
+              <ErrorMessage name="password" render={renderError} />
+            </div>
           </div>
-        )}
-    <div className="input-group mb-3">
-  <div className="input-group-text">
-  <span >Mail</span>
-    
-  </div>
-  <input
-            type="text"
-            name="email"
-            className="form-control"
-             onChange={handleSave}
-            
-          />
-</div>
-{errors.email && (
-          <div className="alert alert-danger">
-            {errors.email}
+          <div className="field">
+            <label className="label" htmlFor="confrimpassword">
+             Confrim password
+            </label>
+            <div className="control">
+              <Field
+                name="confrimpassword"
+                type="number"
+                className="input"
+                placeholder="confrimpassword"
+              />
+              <ErrorMessage name="confrimpassword" render={renderError} />
+            </div>
           </div>
-        )}
-    <div className="input-group mb-3">
-  <div className="input-group-text">
-  <span >Password</span>
-    
-  </div>
-  <input
-            type="text"
-            name="password"
-            className="form-control"
-                        onChange={handleSave}
-            
-          />
-</div>
-{errors.password && (
-          <div className="alert alert-danger">
-            {errors.password}
-          </div>
-        )}
-    <div className="input-group mb-3">
-  <div className="input-group-text">
-  <span >Confrim Password</span>
-    
-  </div>
-  <input
-            type="text"
-            name="password2"
-            className="form-control"
-            
-            onChange={handleSave}
-            
-          />
-</div>
-{errors.password2 && (
-          <div className="alert alert-danger">
-            {errors.password2}
-          </div>
-        )}
-
-<div className="btn">
-          <button
-            type="submit"
-            onClick={validateForm}
-            className="btn btn-success"
-          >
-            Success
+      
+          <button type="submit" className="button is-primary">
+            Submit
           </button>
         </div>
+      </Form>
 
-    </div>
+      <div className="login">
+        <Link to='/login'>Alredy had an account</Link>
+      </div>
+    </Formik>
     
-    <div className="col-sm-3 col2">
-    <img className='images' src="https://www.shutterstock.com/image-photo/rajamundry-bridge-sunset-train-600w-1239643729.jpg"  alt='images'></img>
-    </div>
-  </div>
-  </div>
-)
-}
+  )
+};
+
+export default ReviewForm;

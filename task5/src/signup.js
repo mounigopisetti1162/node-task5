@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as Yup from 'yup'
 import Joi from 'joi'
 import { useFormik } from "formik";
 import { API } from "./global";
@@ -43,6 +44,23 @@ export default function Signup()
             
         // localStorage.setItem('token',data.token);
         })
+        },validate:(values)=>{
+          let {firstname,email,password}=values
+          let errors={}
+          if (!firstname) {
+            errors.firstname = "firstname is required";
+          } else if (firstname.length < 5) {
+            errors.firstname = "firstname is not valid";
+          }
+          if (!password.length) {
+            errors.password.length = "password.length Required";
+          } else if ((password.length) > 8) {
+            errors.password.length = "password.length should be greater than 8";
+          }
+          if (!email) {
+            errors.email = "email is required";
+          } 
+          return errors;
         }
           })
     return(
@@ -73,7 +91,6 @@ export default function Signup()
             type="text"
             name="lastname"
             className="form-control"
-            value={values.lastname}
             onChange={handleChange}
             required/>
 </div>
@@ -122,18 +139,7 @@ export default function Signup()
             
           />
 </div>
-<div class="col-md-4">
-    <label for="validationDefault01" class="form-label">First name</label>
-    <input type="text" class="form-control" id="validationDefault01" value="" required/>
-  </div>
 
-  <div class="col-md-4">
-    <label for="validationDefaultUsername" class="form-label">Username</label>
-    <div class="input-group">
-      <span class="input-group-text" id="inputGroupPrepend2">@</span>
-      <input type="text" class="form-control" id="validationDefaultUsername"  aria-describedby="inputGroupPrepend2" required/>
-    </div>
-  </div>
 
 <div className="btn">
           <button
