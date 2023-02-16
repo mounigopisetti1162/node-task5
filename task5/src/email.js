@@ -18,9 +18,9 @@ export default function Email()
             // console.log(data);
          
             
-            toast("Link Sent to mail")
         })
         console.log(values);
+        toast("Link Sent to mail")
   
     }
 
