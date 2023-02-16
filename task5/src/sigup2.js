@@ -16,13 +16,8 @@ const ReviewForm = () => {
     lastname: Yup.string().required(),
     review: Yup.string().required(),
     password: Yup.string().min(8).max(50).required(),
-    // confrimpassword: Yup.string().when("password", {
-    //   is: val => (val && val.length > 0 ? true : false),
-    //   then: Yup.string().oneOf(
-    //     [Yup.ref("password")],
-    //     "Both password need to be the same"
-    //   )
-    // })
+    confrimpassword: Yup.string().oneOf([Yup.ref("password"), null], "Password must match")
+    .required("Confirm Password is required")
   });
 
   const initialValues = {
