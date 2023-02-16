@@ -7,6 +7,7 @@ import jwt  from "jsonwebtoken";
 import nodemailer from 'nodemailer'
 export const app=express()
 dotenv.config()
+
 const PORT=process.env.PORT||4000
 const MONGO_URL=process.env.MONGO_URL
 const client=new MongoClient(MONGO_URL)
@@ -65,20 +66,42 @@ app.get('/user',async function(request,responce)
 
 app.post('/user',async function(req,res)
 {
-    const {firstname,lastname,email,password}=req.body;
+    const {firstname,email,lastname,password,confrimpassword}=req.body;
     const hashpassword=await generatehashedpassword(password)
+    const hashpassword2=await generatehashedpassword(confrimpassword)
       //  db.movies.insertMany(data)
     //  
-    const newuser = await addnewuser(firstname,lastname,email,hashpassword)
+    const newuser = await addnewuser(firstname,lastname,email,hashpassword,hashpassword2)
     console.log(newuser)
       res.send(newuser)
+})
+app.post('/login',async function(request,responce)
+{
+    const {email,password}=request.body;
+    const emailfound=await getuser(email)
+    if(!emailfound)
+    {
+        responce.send({message:'user not found'})
+    }
+    else{
+        const pass=await bcrypt.compare(password,emailfound.password)
+        if(pass)
+        {
+            const token=jwt.sign({id:emailfound._id},process.env.SCRETE_TOKEN)
+            responce.status(200).send({message:"logged in sucessfully",token:token})
+
+        }
+        else{
+            responce.send({message:'invalid credentials'})
+          }
+    }
 })
 
 
 app.post('/forgot_pass',async function(request,responce)
 {
-    const {username}=request.body
-    const userfound=await getuser(username)
+    const {email}=request.body
+    const userfound=await getuser(email)
     console.log(userfound)
     if(!userfound)
     {
@@ -87,17 +110,18 @@ app.post('/forgot_pass',async function(request,responce)
     else{
         console.log("found")
         const token=jwt.sign({id:userfound._id},process.env.SCRETE,{expiresIn:'15m'})
-        const link=`${process.env.BASE_URL}/reset-password/${userfound._id}/${token}`
-        await mail(userfound.username,'verification mail',link)
+        const link=`${process.env.BASE_URL}/reset-password/${userfound._id}`
+        await mail(userfound.email,'verification mail',link)
         console.log(link)
         responce.send("password rest link ui ssent to mail") 
     }
     // responce.send(user)
 })
 
-app.get('/reset-password',async function(request,responce)
+app.get(`/reset-password/:id`,async function(request,responce)
 {
-    const {id,token}=request.params;
+    const {id}=request.params;
+    console.log(id)
     const useridfound=await getuserbyid(id)
     if(!useridfound)
     {
@@ -105,25 +129,23 @@ app.get('/reset-password',async function(request,responce)
     }
     else{
 
-responce.send({message:'we will reset the password',token:token})
+responce.send({message:'we will reset the password'})
  
     }
 })
 
-app.post('/reset-password',async function(request,responce)
+app.post(`/reset-password`,async function(request,responce)
 {
-    const {username,password}=request.body
-    const usernamefound=await getuser(username)
-    console.log(usernamefound)
-    if(usernamefound)
-    {
-
+    const {email,password}=request.body
+    const userfound=await getuser(email)
+    console.log("dataaa")
+    console.log(password)
         const newpass=await generatehashedpassword(password)
-        const newpassword=await updatepass(usernamefound._id,newpass)
+        const newpassword=await updatepass(userfound._id,newpass)
         console.log(newpass)
         responce.send(newpassword)
-        console.log(newpassword)
-    }
+        console.log("newpassword")
+    
 
 
 })
@@ -138,14 +160,14 @@ async function addnewuser(firstname,lastname,email,hashpassword) {
     return await client.db('password_page').collection('user').insertOne({ firstname:firstname,lastname:lastname,email: email, password: hashpassword, });
 }
 
-async function getuser(username) {
-    return await client.db('password_page').collection('user').findOne({ username: username });
+async function getuser(email) {
+    return await client.db('password_page').collection('user').findOne({ email: email });
 }
 async function getuser1() {
     return await client.db('password_page').collection('user').find({ }).toArray();
 }
 async function getuserbyid(id) {
-    return await client.db('password_page').collection('user').findOne({_id:ObjectId(id)}).toArray();
+    return await client.db('password_page').collection('user').findOne({_id:ObjectId(id)});
 }
 async function updatepass(id,newpass) {
     console.log('password updTE')

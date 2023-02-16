@@ -2,6 +2,8 @@ import * as Yup from "yup";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API } from "./global";
+import {  toast } from 'react-toastify';
+
 
 import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
 // const {values}=useFormik
@@ -52,6 +54,7 @@ const ReviewForm = () => {
     setstatus("submited");
     
     return data.json();}).then(()=>{navigate("/home")
+    toast("Sigined in sucessfully")
         
     // localStorage.setItem('token',data.token);
     })
@@ -61,6 +64,8 @@ const ReviewForm = () => {
   
 
   return (
+    <>
+    <h1>sign up page</h1>
     <Formik
     initialValues={initialValues}
     validationSchema={validationSchema}
@@ -128,7 +133,7 @@ const ReviewForm = () => {
             <div className="control">
               <Field
                 name="password"
-                type="number"
+                type="password"
                 className="input"
                 placeholder="password"
               />
@@ -142,7 +147,7 @@ const ReviewForm = () => {
             <div className="control">
               <Field
                 name="confrimpassword"
-                type="number"
+                type="password"
                 className="input"
                 placeholder="confrimpassword"
               />
@@ -154,11 +159,15 @@ const ReviewForm = () => {
           >
             Submit
           </button>
+          <br></br>
+        <Link to='/login'>Alredy had an account</Link>
+
         </div>
       </Form>
       </div>
+      
       </Formik>
-
+      </>
      
     
   )
