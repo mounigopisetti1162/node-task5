@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API } from "./global";
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
-
+import { Formik, Form, Field, ErrorMessage, useFormik } from "formik";
+// const {values}=useFormik
 const ReviewForm = () => {
 
   const [status,setstatus]=useState('submit')
@@ -14,7 +14,6 @@ const ReviewForm = () => {
     firstname: Yup.string().required("name is man"),
     email: Yup.string().email().required(),
     lastname: Yup.string().required(),
-    review: Yup.string().required(),
     password: Yup.string().min(3).max(50).required(),
     confrimpassword: Yup.string().oneOf([Yup.ref("password"), null], "Password must match")
     .required("Confirm Password is required")
@@ -27,36 +26,36 @@ const ReviewForm = () => {
     password: "",
     confrimpassword: "",
   };
-  const onSubmit = (values) => {
-    console.log(values)
-    alert((values, null, 2));
-  };
+  // const onsubmit = (values) => {
+  //   console.log(values)
+  //   alert((values, null, 2));
+  // };
 
-  // const onSubmit = (values) => {
-  //   console.log("submited")
+  const onSubmit = (values) => {
+    console.log("submited")
     
-  //     setstatus('loding..') 
-  //     console.log(values)
-  //     fetch(`${API}/user`,{
-  //       method:'POST',
-  //       body:JSON.stringify(values),
-  //       headers:{"Content-Type":"application/json"},
+      setstatus('loding..') 
+      console.log(values)
+      fetch(`${API}/user`,{
+        method:'POST',
+        body:JSON.stringify(values),
+        headers:{"Content-Type":"application/json"},
         
-  //     }).then((data)=>
-  //     {
-  //   if(data.status===401)
-  //   {
-  //     setstatus("error")
-  //   throw new Error(data.statusText)
+      }).then((data)=>
+      {
+    if(data.status===401)
+    {
+      setstatus("error")
+    throw new Error(data.statusText)
     
-  //   }
-  //   setstatus("submited");
+    }
+    setstatus("submited");
     
-  //   return data.json();}).then(()=>{navigate("/home")
+    return data.json();}).then(()=>{navigate("/home")
         
-  //   // localStorage.setItem('token',data.token);
-  //   })
-  //   }
+    // localStorage.setItem('token',data.token);
+    })
+    }
   
     const renderError = (message) => <p className="help is-danger">{message}</p>;
   
@@ -66,7 +65,8 @@ const ReviewForm = () => {
     initialValues={initialValues}
     validationSchema={validationSchema}
     onSubmit={values => {
-     onSubmit(values);
+       onSubmit(values);
+      console.log(values)
     }}
   >
     <div>
@@ -87,7 +87,6 @@ const ReviewForm = () => {
                 type="text"
                 className="input"
                 placeholder="Full name"
-                // value={values.firstname}
               />
               <ErrorMessage name="firstname" render={renderError} />
             </div>
