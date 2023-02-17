@@ -15,12 +15,12 @@ export default function Email()
         body:JSON.stringify(values),
         headers:{"Content-type":"application/json"},
     }).then((data)=> data.json()).then(()=>{
+      toast("Link Sent to mail")
             // console.log(data);
          
             
         })
         console.log(values);
-        toast("Link Sent to mail")
   
     }
 
