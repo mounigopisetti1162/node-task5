@@ -57,6 +57,8 @@ const ReviewForm = () => {
     toast("Sigined in sucessfully")
         
     // localStorage.setItem('token',data.token);
+    }).catch((err)=>{
+      toast("username alredy exist")
     })
     }
   

@@ -67,6 +67,9 @@ app.get('/user',async function(request,responce)
 app.post('/user',async function(req,res)
 {
     const {firstname,email,lastname,password,confrimpassword}=req.body;
+    const found=getuser(email)
+    if(!found)
+    {
     const hashpassword=await generatehashedpassword(password)
     const hashpassword2=await generatehashedpassword(confrimpassword)
       //  db.movies.insertMany(data)
@@ -74,6 +77,10 @@ app.post('/user',async function(req,res)
     const newuser = await addnewuser(firstname,lastname,email,hashpassword,hashpassword2)
     console.log(newuser)
       res.send(newuser)
+    }
+    else{
+        res.status(401).send({message:"this user alredy exist"})
+    }
 })
 app.post('/login',async function(request,responce)
 {
