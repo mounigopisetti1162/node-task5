@@ -10,7 +10,7 @@ export default function Email()
     const nav=useNavigate()
 
     const onSubmit=(values)=>{
-        fetch(`${API}/forgot_pass`,{
+        fetch(`${API}/forgotpass`,{
         method:"POST",
         body:JSON.stringify(values),
         headers:{"Content-type":"application/json"},

@@ -98,7 +98,7 @@ app.post('/login',async function(request,responce)
 })
 
 
-app.post('/forgot_pass',async function(request,responce)
+app.post('/forgotpass',async function(request,responce)
 {
     const {email}=request.body
     const userfound=await getuser(email)
