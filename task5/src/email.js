@@ -10,16 +10,16 @@ export default function Email()
     const nav=useNavigate()
 
     const onSubmit=(values)=>{
+      console.log(values);
         fetch(`${API}/forgotpass`,{
+         
         method:"POST",
         body:JSON.stringify(values),
         headers:{"Content-type":"application/json"},
-    }).then((data)=> data.json()).then(()=>{
+    }).then((data)=> data.json()).then((data)=>{
       toast("Link Sent to mail")
-      // console.log(data);
+      console.log(data);
       nav("/login")
-      
-      
     }).catch((err)=>{
       console.log(err)
       toast("Error in  mail")

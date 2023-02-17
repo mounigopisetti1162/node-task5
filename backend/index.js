@@ -100,9 +100,9 @@ app.post('/login',async function(request,responce)
 
 app.post('/forgotpass',async function(request,responce)
 {
+    console.log(request.body)
     const {email}=request.body
     const userfound=await getuser(email)
-    console.log("userfound")
     // responce.send({monika:"very very inteligent girl"})
     if(!userfound)
     {
