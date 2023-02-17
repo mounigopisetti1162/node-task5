@@ -94,6 +94,7 @@ app.post('/login',async function(request,responce)
     }
     else{
         const pass=await bcrypt.compare(password,emailfound.password)
+        console.log(pass)
         if(pass)
         {
             const token=jwt.sign({id:emailfound._id},process.env.SCRETE_TOKEN)
@@ -101,7 +102,7 @@ app.post('/login',async function(request,responce)
 
         }
         else{
-            responce.send({message:'invalid credentials'})
+            responce.status(401).send({message:'invalid credentials'})
           }
     }
 })
