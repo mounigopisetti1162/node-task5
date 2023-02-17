@@ -16,11 +16,14 @@ export default function Email()
         headers:{"Content-type":"application/json"},
     }).then((data)=> data.json()).then(()=>{
       toast("Link Sent to mail")
-            // console.log(data);
-            nav("/login")
-         
-            
-        })
+      // console.log(data);
+      nav("/login")
+      
+      
+    }).catch((err)=>{
+      console.log(err)
+      toast("Error in  mail")
+    })
         console.log(values);
   
     }

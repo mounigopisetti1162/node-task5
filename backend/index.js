@@ -102,7 +102,8 @@ app.post('/forgot_pass',async function(request,responce)
 {
     const {email}=request.body
     const userfound=await getuser(email)
-    console.log(userfound)
+    console.log("userfound")
+    // responce.send({monika:"very very inteligent girl"})
     if(!userfound)
     {
         responce.send({message:'this user is not found'})
@@ -113,9 +114,8 @@ app.post('/forgot_pass',async function(request,responce)
         const link=`${process.env.BASE_URL}/reset-password/${userfound._id}`
         await mail(userfound.email,'verification mail',link)
         console.log(link)
-        responce.send("password rest link ui ssent to mail") 
+        responce.send({messagr:"password rest link ui ssent to mail"}) 
     }
-    // responce.send(user)
 })
 
 app.get(`/reset-password/:id`,async function(request,responce)
