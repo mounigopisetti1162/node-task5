@@ -120,7 +120,7 @@ app.post('/forgot_pass',async function(request,responce)
 
 app.get(`/reset-password/:id`,async function(request,responce)
 {
-    const {id}=request.params;
+    const {id}=request.params
     console.log(id)
     const useridfound=await getuserbyid(id)
     if(!useridfound)
