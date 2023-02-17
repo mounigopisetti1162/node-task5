@@ -17,6 +17,7 @@ export default function Email()
     }).then((data)=> data.json()).then(()=>{
       toast("Link Sent to mail")
             // console.log(data);
+            nav("/login")
          
             
         })
