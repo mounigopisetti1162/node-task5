@@ -25,6 +25,7 @@ const onSubmit=(values)=>{
         .required("Confirm Password is required")
       });
     const initialValues = {
+      email:"",
         password: "",
         confrimpassword: "",
       };
