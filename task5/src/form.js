@@ -2,9 +2,11 @@ import {useFormik} from "formik";
 import { API } from "./global";
 import * as Yup from "yup";
 import { Formik, Form, Field, ErrorMessage} from "formik";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export default function Formss()
 {
-   
+   const nav=useNavigate()
 const onSubmit=(values)=>{
     console.log("data")
     fetch(`${API}/reset-password`,{
@@ -13,6 +15,8 @@ const onSubmit=(values)=>{
     headers:{"Content-type":"application/json"},
 }).then((data)=> data.json()).then((data)=>{
         console.log(data)
+        toast("chaned sucessfully")
+        nav('/login')
     })
 // console.log(values)
   }
