@@ -68,6 +68,7 @@ app.post('/user',async function(req,res)
 {
     const {firstname,email,lastname,password,confrimpassword}=req.body;
     const found=getuser(email)
+    console.log(found)
     if(!found)
     {
     const hashpassword=await generatehashedpassword(password)
