@@ -49,7 +49,8 @@ localStorage.setItem('token',data.token);
 toast("Loged in sucessfullt")
 nav('/home');
 // localStorage.setItem('token',data.token);
-})
+}).catch((err)=>{console.log(err);
+toast("inalid credentials")})
 }
 
 const renderError = (message) => <p className="help is-danger">{message}</p>;
