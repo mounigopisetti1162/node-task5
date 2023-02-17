@@ -19,7 +19,7 @@ export default function Email()
     }).then((data)=> data.json()).then((data)=>{
       toast("Link Sent to mail")
       console.log(data);
-      nav("/login")
+      // nav("/login")
     }).catch((err)=>{
       console.log(err)
       toast("Error in  mail")
