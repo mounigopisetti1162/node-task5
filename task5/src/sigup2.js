@@ -47,6 +47,7 @@ const ReviewForm = () => {
       {
     if(data.status===401)
     {
+      toast("email alredy exists")
       setstatus("error")
     throw new Error(data.statusText)
     
