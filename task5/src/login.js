@@ -47,8 +47,9 @@ throw new Error(data.statusText)
 setstatus("submited");
 return data.json();}).then((data)=>{console.log(data);
 localStorage.setItem('token',data.token);
-toast("Loged in sucessfullt")
 nav('/home');
+toast("Loged in sucessfullt")
+
 // localStorage.setItem('token',data.token);
 }).catch((err)=>{console.log(err);
 toast("inalid credentials")})
