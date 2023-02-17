@@ -57,9 +57,10 @@ const ReviewForm = () => {
     toast("Sigined in sucessfully")
         
     // localStorage.setItem('token',data.token);
-    }).catch((err)=>{
-      toast("username alredy exist")
     })
+    // .catch((err)=>{
+    //   toast("username alredy exist")
+    // })
     }
   
     const renderError = (message) => <p className="help is-danger">{message}</p>;
